@@ -1,7 +1,16 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.EntityFrameworkCore;
+using iCare.Data; // Ensure this matches the namespace of your AppDbContext
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add MySQL DbContext registration
+#pragma warning disable CS8604 // Possible null reference argument.
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString(name: "DefaultConnection")));
+#pragma warning restore CS8604 // Possible null reference argument.
 
 var app = builder.Build();
 
@@ -25,4 +34,3 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-

@@ -1,32 +1,36 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using iCare.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace iCare.Controllers;
-
-public class HomeController : Controller
+namespace iCare.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        // This action method handles GET requests to the root URL.
+        public IActionResult Index()
+        {
+            // Return the view associated with this action method.
+            return View();
+        }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        // Optionally, you can add more actions if needed, for example:
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        // This action method handles GET requests to /Home/About
+        public IActionResult About()
+        {
+            ViewData["Message"] = "Your application description page.";
+            return View();
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        // This action method handles GET requests to /Home/Contact
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "Your contact page.";
+            return View();
+        }
+
+        // This action method handles GET requests to /Home/Error
+        public IActionResult Error()
+        {
+            return View();
+        }
     }
 }
-
