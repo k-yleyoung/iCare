@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization; // Make sure this is imported
+using Microsoft.AspNetCore.Mvc;
 
 namespace iCare.Controllers
 {
+    [Authorize] // This ensures that users must be logged in before accessing any actions in this controller
     public class HomeController : Controller
     {
         // This action method handles GET requests to the root URL.

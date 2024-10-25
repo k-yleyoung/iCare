@@ -6,21 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <!-- Ensure that the correct configuration for running HTTP and HTTPS is specified -->
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
-  <ItemGroup>
-    <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.8" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Data\" />
-    <None Remove="Views\Account\" />
-    <None Remove="Views\Patients\" />
-  </ItemGroup>
+
+  <!-- Including the necessary folders and files -->
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Patients\" />
   </ItemGroup>
+
+  <!-- Excluding models from single file publishing and specifying that they're copied during publishing -->
   <ItemGroup>
     <Compile Update="Models\LoginViewModel.cs">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -31,4 +28,20 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Compile>
   </ItemGroup>
+
+  <!-- Add the necessary package references, including Entity Framework Core and MySQL support -->
+  <ItemGroup>
+    <!-- EF Core Design Tools for migrations -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+
+    <!-- MySQL Entity Framework Core package for MySQL database support -->
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.8" />
+
+    <!-- Optionally, if you need Entity Framework Core runtime, add this -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+  </ItemGroup>
+
 </Project>

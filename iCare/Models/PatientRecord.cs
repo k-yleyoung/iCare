@@ -2,6 +2,7 @@
 {
     public class PatientRecord
     {
+        public int Id { get; set; }
         public required int RecordId { get; set; }
         public required int PatientId { get; set; }
         public DateTime RecordDate { get; set; }
