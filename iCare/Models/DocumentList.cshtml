@@ -1,0 +1,21 @@
+﻿@model IEnumerable<iCare.Models.Document>
+
+<h2>Uploaded Documents</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>File Name</th>
+            <th>File Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var document in Model)
+        {
+            <tr>
+                <td>@document.FileName</td>
+                <td>@document.ContentType</td>
+            </tr>
+        }
+    </tbody>
+</table>

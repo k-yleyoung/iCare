@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Patient>
+
+@{
+    ViewData["Title"] = "My Board";
+}
+
+<h2>My Board</h2>
+
+<ul class="list-group">
+    @foreach (var patient in Model)
+    {
+        <li class="list-group-item">
+            <h4>@patient.Name (@patient.BloodGroup)</h4>
+            <p>Assigned Location: @patient.TreatmentArea</p>
+            <p>DOB: @patient.DateOfBirth.ToShortDateString()</p>
+            <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-info">View Patient</a>
+        </li>
+    }
+</ul>

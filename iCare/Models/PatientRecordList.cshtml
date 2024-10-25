@@ -1,0 +1,21 @@
+﻿@model IEnumerable<iCare.Models.PatientRecord>
+
+<h2>Patient Records</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Record Date</th>
+            <th>Treatment Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in Model)
+        {
+            <tr>
+                <td>@record.RecordDate.ToShortDateString()</td>
+                <td>@record.TreatmentDetails</td>
+            </tr>
+        }
+    </tbody>
+</table>

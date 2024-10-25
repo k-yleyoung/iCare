@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using iCare.Models; // Ensure this matches the namespace of your models
+using iCare.Models;
 
 namespace iCare.Data
 {
@@ -14,6 +14,6 @@ namespace iCare.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<PatientRecord> PatientRecords { get; set; }
-        public DbSet<iCare.Models.Document> Documents { get; set; } // Fully qualify the Document model
+        public DbSet<Document> Documents { get; set; } // Removed redundant full qualification
     }
 }

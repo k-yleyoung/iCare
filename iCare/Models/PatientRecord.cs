@@ -2,13 +2,13 @@
 {
     public class PatientRecord
     {
-        public int RecordId { get; set; }
-        public int PatientId { get; set; }
+        public required int RecordId { get; set; }
+        public required int PatientId { get; set; }
         public DateTime RecordDate { get; set; }
-        public string TreatmentDetails { get; set; }
-        public int DoctorId { get; set; }
+        public required string TreatmentDetails { get; set; }
+        public required int DoctorId { get; set; }
 
-        public Patient Patient { get; set; }
-        public User Doctor { get; set; }
+        public required Patient Patient { get; set; }
+        public required User Doctor { get; set; }
     }
 }
