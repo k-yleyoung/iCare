@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using iCare.Data;
 using iCare.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace iCare.Controllers
 {
@@ -38,17 +41,38 @@ namespace iCare.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string username, string password)
+        public async Task<IActionResult> Login(string username, string password)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
             if (user != null)
             {
-                // Handle user authentication logic here (session or identity management)
-                return RedirectToAction("Index", "Home");
+                // Define the user's claims (e.g., username and role)
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
+
+                // Create a claims identity
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                // Sign in the user
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                // Redirect based on user role
+                return user.Role switch
+                {
+                    "doctor" => RedirectToAction("DoctorDashboard", "doctor"),
+                    "nurse" => RedirectToAction("NurseDashboard", "nurse"),
+                    "admin" => RedirectToAction("AdminDashboard", "admin"),
+                    _ => RedirectToAction("Index", "Home") // Default redirect if role is unknown
+                };
             }
+
             ModelState.AddModelError("", "Invalid login attempt.");
             return View();
         }
+
 
         // Add any other user-related actions, such as editing roles
     }

@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Nurse Dashboard";
+}
+
+<h2>Nurse Dashboard</h2>
+
+<div class="dashboard-section">
+    <h3>Welcome, @User.Identity.Name!</h3>
+    <p>This is your dashboard where you can view patient care instructions and assist with ongoing treatments.</p>
+</div>
+
+<div class="card-container">
+    <div class="card">
+        <h4>Patient Care Instructions</h4>
+        <p>View and update care instructions for assigned patients.</p>
+        <a asp-action="ViewCareInstructions" class="btn btn-primary">View Care Instructions</a>
+    </div>
+
+    <div class="card">
+        <h4>Assist Treatments</h4>
+        <p>Provide assistance with ongoing treatments and procedures.</p>
+        <a asp-action="AssistTreatments" class="btn btn-primary">Assist Treatments</a>
+    </div>
+</div>
+
+<style>
+    .dashboard-section {
+        margin-bottom: 20px;
+    }
+
+    .card-container {
+        display: flex;
+        gap: 15px;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        padding: 20px;
+        width: 45%;
+        text-align: center;
+    }
+
+    .btn {
+        color: #fff;
+        background-color: #28a745;
+        border: none;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+</style>

@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Doctor Dashboard";
+}
+
+<h2>Doctor Dashboard</h2>
+
+<div class="dashboard-section">
+    <h3>Welcome, Dr. @User.Identity.Name!</h3>
+    <p>This is your dashboard where you can manage patient records and view upcoming appointments.</p>
+</div>
+
+<div class="card-container">
+    <div class="card">
+        <h4>Patient Records</h4>
+        <p>Access detailed patient information and records.</p>
+        <a asp-action="ViewPatientRecords" class="btn btn-primary">View Patient Records</a>
+    </div>
+
+    <div class="card">
+        <h4>Appointments</h4>
+        <p>Review and manage upcoming appointments.</p>
+        <a asp-action="ManageAppointments" class="btn btn-primary">View Appointments</a>
+    </div>
+</div>
+
+<style>
+    .dashboard-section {
+        margin-bottom: 20px;
+    }
+
+    .card-container {
+        display: flex;
+        gap: 15px;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        padding: 20px;
+        width: 45%;
+        text-align: center;
+    }
+
+    .btn {
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+</style>

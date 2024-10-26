@@ -15,6 +15,9 @@
     <Folder Include="Data\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Patients\" />
+    <Folder Include="Views\Doctor\" />
+    <Folder Include="Views\Nurse\" />
+    <Folder Include="Views\Admin\" />
   </ItemGroup>
 
   <!-- Excluding models from single file publishing and specifying that they're copied during publishing -->
@@ -44,4 +47,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Views\Doctor\" />
+    <None Remove="Views\Nurse\" />
+    <None Remove="Views\Admin\" />
+  </ItemGroup>
 </Project>

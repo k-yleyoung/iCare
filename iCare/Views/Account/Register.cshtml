@@ -22,7 +22,8 @@
     <div class="form-group">
         <label asp-for="Role"></label>
         <select asp-for="Role" class="form-control">
-            <option value="user">User</option>
+            <option value="nurse">Nurse</option>
+            <option value="doctor">Doctor</option>
             <option value="admin">Admin</option>
         </select>
         <span asp-validation-for="Role" class="text-danger"></span>
