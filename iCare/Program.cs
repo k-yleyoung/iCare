@@ -1,4 +1,5 @@
 ﻿using iCare.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,12 +20,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySQL(connectionString)); // Use the connectionString variable with null check
 
 // Authentication configuration
-builder.Services.AddAuthentication("CookieAuthentication")
-    .AddCookie("CookieAuthentication", config =>
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme) // Use default scheme
+    .AddCookie(options =>
     {
-        config.Cookie.Name = "UserLoginCookie";
-        config.LoginPath = "/Account/Login";
+        options.Cookie.Name = "UserLoginCookie";
+        options.LoginPath = "/Account/Login";
     });
+
 
 // Authorization configuration
 builder.Services.AddAuthorization();

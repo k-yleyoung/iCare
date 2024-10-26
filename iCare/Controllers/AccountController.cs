@@ -21,6 +21,20 @@ namespace iCare.Controllers
             return View();
         }
 
+        public IActionResult TestDatabaseConnection()
+        {
+            try
+            {
+                bool isConnected = _context.Database.CanConnect();
+                return Content(isConnected ? "Database connection successful." : "Failed to connect to the database.");
+            }
+            catch (Exception ex)
+            {
+                return Content($"Database connection error: {ex.Message}");
+            }
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
