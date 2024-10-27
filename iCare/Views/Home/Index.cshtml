@@ -4,29 +4,26 @@
 
 <h1>Welcome to the iCare Application!</h1>
 
-<p>Try out some of the functions (Not currently working)</p>
+@if (User.Identity.IsAuthenticated)
+{
+    <p>Access your boards below:</p>
+    <div class="container">
+        <div class="row">
+            <!-- iCare Board -->
+            <div class="col-md-6">
+                <h3>iCare Board</h3>
+                <a href="/iCareBoard" class="btn btn-primary">View iCare Board</a>
+            </div>
 
-<div class="container">
-    <div class="row">
-        <!-- Patient Management -->
-        <div class="col-md-4">
-            <h3>Manage Patients</h3>
-            <a href="/Patient/Create" class="btn btn-primary">Create New Patient</a><br /><br />
-            <a href="/Patient/List" class="btn btn-secondary">View All Patients</a>
-        </div>
-
-        <!-- Document Management -->
-        <div class="col-md-4">
-            <h3>Manage Documents</h3>
-            <a href="/Document/Upload" class="btn btn-primary">Upload New Document</a><br /><br />
-            <a href="/Document/List" class="btn btn-secondary">View All Documents</a>
-        </div>
-
-        <!-- Records Management -->
-        <div class="col-md-4">
-            <h3>Manage Records</h3>
-            <a href="/PatientRecord/Create" class="btn btn-primary">Add Patient Record</a><br /><br />
-            <a href="/PatientRecord/List" class="btn btn-secondary">View Patient Records</a>
+            <!-- myCare Board -->
+            <div class="col-md-6">
+                <h3>myCare Board</h3>
+                <a href="/myCareBoard" class="btn btn-secondary">View myCare Board</a>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <p>You need to log in to access the boards.</p>
+}

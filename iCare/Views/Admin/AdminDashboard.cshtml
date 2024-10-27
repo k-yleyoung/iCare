@@ -11,6 +11,18 @@
 
 <div class="card-container">
     <div class="card">
+        <h4>iCare Board</h4>
+        <p>Access the iCare board for patient management and updates.</p>
+        <a href="/iCare" class="btn btn-primary">Go to iCare Board</a> <!-- Link to iCare Board -->
+    </div>
+
+    <div class="card">
+        <h4>myCare Board</h4>
+        <p>Access your personal myCare board.</p>
+        <a href="/myCare" class="btn btn-primary">Go to myCare Board</a> <!-- Link to myCare Board -->
+    </div>
+
+    <div class="card">
         <h4>Manage Users</h4>
         <p>Add, edit, or remove users from the system.</p>
         <a asp-action="ManageUsers" class="btn btn-primary">Manage Users</a>
@@ -36,13 +48,14 @@
 
     .card-container {
         display: flex;
+        flex-wrap: wrap; /* Allow cards to wrap in smaller screens */
         gap: 15px;
     }
 
     .card {
         border: 1px solid #ddd;
         padding: 20px;
-        width: 30%;
+        width: 30%; /* Adjust width as necessary */
         text-align: center;
     }
 

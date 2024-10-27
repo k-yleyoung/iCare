@@ -18,6 +18,7 @@
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\Doctor\" />
     <Folder Include="Views\Nurse\" />
+    <Folder Include="Views\iCareBoard\" />
   </ItemGroup>
 
   <!-- Excluding models from single file publishing and specifying that they're copied during publishing -->
@@ -52,5 +53,6 @@
     <None Remove="Views\Admin\" />
     <None Remove="Views\Doctor\" />
     <None Remove="Views\Nurse\" />
+    <None Remove="Views\iCareBoard\" />
   </ItemGroup>
 </Project>

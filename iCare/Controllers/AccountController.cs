@@ -41,59 +41,14 @@ namespace iCare.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity));
 
-                // Redirect based on user role
-                return user.Role switch
-                {
-                    "doctor" => RedirectToAction("DoctorDashboard", "Doctor"),
-                    "nurse" => RedirectToAction("NurseDashboard", "Nurse"),
-                    "admin" => RedirectToAction("AdminDashboard", "Admin"),
-                    _ => RedirectToAction("Index", "Home") // Fallback in case of an unknown role
-                };
+                // Redirect to the home page after successful login
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError("", "Invalid username or password.");
             return View();
         }
 
-        // Display Registration View
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        // Handle Registration Form Submission
-        [HttpPost]
-        public IActionResult Register(User user)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Users.Add(user);
-                _context.SaveChanges();
-                return RedirectToAction("Login");
-            }
-            return View(user);
-        }
-
-        // Handle Logout
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login");
-        }
-
-        // Optional: Database connection test
-        public IActionResult TestDatabaseConnection()
-        {
-            try
-            {
-                bool isConnected = _context.Database.CanConnect();
-                return Content(isConnected ? "Database connection successful." : "Failed to connect to the database.");
-            }
-            catch (Exception ex)
-            {
-                return Content($"Database connection error: {ex.Message}");
-            }
-        }
+        // Other methods (e.g., Register, Logout) can go here
     }
 }

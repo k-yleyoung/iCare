@@ -1,37 +1,19 @@
-﻿using Microsoft.AspNetCore.Authorization; // Make sure this is imported
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iCare.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
-        
+        [HttpGet]
         public IActionResult Index()
         {
-            
-            return View();
-        }
+            if (!User.Identity.IsAuthenticated)
+            {
+                // Redirect to login if not authenticated
+                return RedirectToAction("Login", "Account");
+            }
 
-        
-
-        
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-            return View();
-        }
-
-        
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-            return View();
-        }
-
-        
-        public IActionResult Error()
-        {
             return View();
         }
     }
