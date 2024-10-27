@@ -15,9 +15,9 @@
     <Folder Include="Data\" />
     <Folder Include="Views\Account\" />
     <Folder Include="Views\Patients\" />
+    <Folder Include="Views\Admin\" />
     <Folder Include="Views\Doctor\" />
     <Folder Include="Views\Nurse\" />
-    <Folder Include="Views\Admin\" />
   </ItemGroup>
 
   <!-- Excluding models from single file publishing and specifying that they're copied during publishing -->
@@ -39,17 +39,18 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="MySql.Data" Version="8.2.0" />
 
     <!-- MySQL Entity Framework Core package for MySQL database support -->
-    <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.10" />
 
     <!-- Optionally, if you need Entity Framework Core runtime, add this -->
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Views\Admin\" />
     <None Remove="Views\Doctor\" />
     <None Remove="Views\Nurse\" />
-    <None Remove="Views\Admin\" />
   </ItemGroup>
 </Project>

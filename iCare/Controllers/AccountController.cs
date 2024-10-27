@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
-using iCare.Models;
 using iCare.Data;
+using iCare.Models;
 
 namespace iCare.Controllers
 {
@@ -16,29 +16,18 @@ namespace iCare.Controllers
             _context = context;
         }
 
+        // Display Login View
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        public IActionResult TestDatabaseConnection()
-        {
-            try
-            {
-                bool isConnected = _context.Database.CanConnect();
-                return Content(isConnected ? "Database connection successful." : "Failed to connect to the database.");
-            }
-            catch (Exception ex)
-            {
-                return Content($"Database connection error: {ex.Message}");
-            }
-        }
-
-
+        // Handle Login Form Submission
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            var user = _context.Users.SingleOrDefault(u => u.Username == username && u.Password == password);
+            var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
             if (user != null)
             {
                 var claims = new List<Claim>
@@ -52,18 +41,28 @@ namespace iCare.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity));
 
-                return RedirectToAction("Index", "Home");
+                // Redirect based on user role
+                return user.Role switch
+                {
+                    "doctor" => RedirectToAction("DoctorDashboard", "Doctor"),
+                    "nurse" => RedirectToAction("NurseDashboard", "Nurse"),
+                    "admin" => RedirectToAction("AdminDashboard", "Admin"),
+                    _ => RedirectToAction("Index", "Home") // Fallback in case of an unknown role
+                };
             }
 
-            ViewBag.Error = "Invalid username or password";
+            ModelState.AddModelError("", "Invalid username or password.");
             return View();
         }
 
+        // Display Registration View
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+        // Handle Registration Form Submission
         [HttpPost]
         public IActionResult Register(User user)
         {
@@ -76,10 +75,25 @@ namespace iCare.Controllers
             return View(user);
         }
 
+        // Handle Logout
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
+        }
+
+        // Optional: Database connection test
+        public IActionResult TestDatabaseConnection()
+        {
+            try
+            {
+                bool isConnected = _context.Database.CanConnect();
+                return Content(isConnected ? "Database connection successful." : "Failed to connect to the database.");
+            }
+            catch (Exception ex)
+            {
+                return Content($"Database connection error: {ex.Message}");
+            }
         }
     }
 }
