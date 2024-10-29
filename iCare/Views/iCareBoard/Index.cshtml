@@ -6,28 +6,36 @@
 
 <h1>iCare Board</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Date of Birth</th>
-            <th>Address</th>
-            <th>Blood Group</th>
-            <th>Treatment Area</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var patient in Model)
-        {
+<form asp-action="AssignPatients" method="post">
+    <table class="table">
+        <thead>
             <tr>
-                <td>@patient.Id</td>
-                <td>@patient.Name</td>
-                <td>@patient.DateOfBirth.ToString("yyyy-MM-dd")</td>
-                <td>@patient.Address</td>
-                <td>@patient.BloodGroup</td>
-                <td>@patient.TreatmentArea</td>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>Blood Group</th>
+                <th>Treatment Area</th>
+                <th>Actions</th> <!-- New column for the action button -->
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var patient in Model)
+            {
+                <tr>
+                    <td>@patient.Id</td>
+                    <td>@patient.Name</td>
+                    <td>@patient.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                    <td>@patient.Address</td>
+                    <td>@patient.BloodGroup</td>
+                    <td>@patient.TreatmentArea</td>
+                    <td>
+                        <button type="submit" name="selectedPatientIds" value="@patient.Id" class="btn btn-primary">
+                            Assign to Me
+                        </button>
+                    </td> <!-- Button to assign this patient to the current user -->
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

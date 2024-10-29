@@ -1,12 +1,13 @@
-﻿@model IEnumerable<Patient>
+﻿@model IEnumerable<iCare.Models.Patient>
 
 @{
-    ViewData["Title"] = "My Board";
+    ViewData["Title"] = "My Care Board";
 }
 
-<h2>My Board</h2>
+<h2>My Assigned Patients</h2>
 
-<form asp-action="AssignPatients" method="post">
+@if (Model.Any())
+{
     <ul class="list-group">
         @foreach (var patient in Model)
         {
@@ -14,12 +15,12 @@
                 <h4>@patient.Name (@patient.BloodGroup)</h4>
                 <p>Assigned Location: @patient.TreatmentArea</p>
                 <p>DOB: @patient.DateOfBirth.ToShortDateString()</p>
-
-                <button type="submit" name="selectedPatientIds" value="@patient.Id" class="btn btn-primary">
-                    Assign to Me
-                </button>
                 <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-info">View Patient</a>
             </li>
         }
     </ul>
-</form>
+}
+else
+{
+    <p>No patients assigned.</p>
+}

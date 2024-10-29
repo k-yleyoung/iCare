@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using iCare.Data;
 using iCare.Models;
 using System.Linq;
+using System.Security.Claims;
 
 namespace iCare.Controllers
 {
@@ -26,9 +27,33 @@ namespace iCare.Controllers
         [HttpPost]
         public IActionResult AssignPatients(int[] selectedPatientIds)
         {
-            // Logic to assign selected patients to the logged-in user
-            // This is a placeholder for your assignment logic
+            var workerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            foreach (var patientId in selectedPatientIds)
+            {
+                var assignmentExists = _context.UserPatients.Any(wp => wp.WorkerId == workerId && wp.PatientId == patientId);
+                if (!assignmentExists)
+                {
+                    _context.UserPatients.Add(new UserPatient
+                    {
+                        WorkerId = workerId,
+                        PatientId = patientId
+                    });
+                }
+            }
+            _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        // GET: myCareBoard
+        public IActionResult myCareBoard()
+        {
+            var workerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var assignedPatients = _context.UserPatients
+                .Where(up => up.WorkerId == workerId)
+                .Select(up => up.Patient)
+                .ToList();
+
+            return View(assignedPatients);
         }
     }
 }
