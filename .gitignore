@@ -223,10 +223,6 @@ AutoTest.Net/
 # Installshield output folder
 [Ee]xpress/
 
-iCare/Program.cs
-iCare/appsettings.json
-iCare/appsettings.Development.json
-
 
 # DocProject is a documentation generator add-in
 DocProject/buildhelp/
