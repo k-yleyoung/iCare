@@ -26,8 +26,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.Name = "UserLoginCookie";
         options.LoginPath = "/Account/Login";
     });
-
-
 // Authorization configuration
 builder.Services.AddAuthorization();
 
