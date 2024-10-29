@@ -4,7 +4,6 @@ using iCare.Models;
 using System.Linq;
 
 namespace iCare.Controllers
-    this is a test
 {
     public class UsersController : Controller
     {

@@ -224,8 +224,9 @@ AutoTest.Net/
 [Ee]xpress/
 
 Program.cs
-appsettings.json
-appsettings.Developmentjson
+iCare/appsettings.json
+iCare/appsettings.Development.json
+
 
 # DocProject is a documentation generator add-in
 DocProject/buildhelp/
