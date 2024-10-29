@@ -223,7 +223,7 @@ AutoTest.Net/
 # Installshield output folder
 [Ee]xpress/
 
-Program.cs
+iCare/Program.cs
 iCare/appsettings.json
 iCare/appsettings.Development.json
 
