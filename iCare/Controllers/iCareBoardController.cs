@@ -23,24 +23,53 @@ namespace iCare.Controllers
             return View(patients);
         }
 
+        // GET: iCareBoard/Edit/5
+        public IActionResult Edit(int id)
+        {
+            var patient = _context.Patients.Find(id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            return View(patient);
+        }
+
+        // POST: iCareBoard/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Patient patient)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Update(patient);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(patient);
+        }
+
         // Assign patient
         [HttpPost]
         public IActionResult AssignPatients(int[] selectedPatientIds)
         {
-            var workerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            foreach (var patientId in selectedPatientIds)
+            // Check if the user has the role of Doctor or Nurse
+            if (User.IsInRole("Doctor") || User.IsInRole("Nurse"))
             {
-                var assignmentExists = _context.UserPatients.Any(wp => wp.WorkerId == workerId && wp.PatientId == patientId);
-                if (!assignmentExists)
+                var workerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                foreach (var patientId in selectedPatientIds)
                 {
-                    _context.UserPatients.Add(new UserPatient
+                    var assignmentExists = _context.UserPatients.Any(wp => wp.WorkerId == workerId && wp.PatientId == patientId);
+                    if (!assignmentExists)
                     {
-                        WorkerId = workerId,
-                        PatientId = patientId
-                    });
+                        _context.UserPatients.Add(new UserPatient
+                        {
+                            WorkerId = workerId,
+                            PatientId = patientId
+                        });
+                    }
                 }
+                _context.SaveChanges();
             }
-            _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
