@@ -9,7 +9,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Actions</th> <!-- New column for the Edit button -->
+            <th>Actions</th> <!-- New column for the Edit and View Records buttons -->
             <th>Id</th>
             <th>Name</th>
             <th>Date of Birth</th>
@@ -25,6 +25,8 @@
                 <td>
                     <!-- Edit button for each patient -->
                     <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-secondary">Edit</a>
+                    <!-- View Records button for each patient -->
+                    <a asp-action="Records" asp-route-patientId="@patient.Id" class="btn btn-info">View Records</a>
                 </td>
                 <td>@patient.Id</td>
                 <td>@patient.Name</td>

@@ -1,0 +1,29 @@
+﻿@model List<string>
+
+@{
+    ViewData["Title"] = "Patient Records";
+}
+
+<h2>@ViewBag.PatientName's Records</h2>
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var pdfFile in Model)
+        {
+            <li>
+                <a href="~/PDFs/@ViewBag.PatientId/@pdfFile" target="_blank">@pdfFile</a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No records found for this patient.</p>
+}
+
+<form asp-action="CreatePdf" method="post">
+    <input type="hidden" name="patientId" value="@ViewBag.PatientId" />
+    <textarea name="documentContent" placeholder="Enter document content here"></textarea>
+    <button type="submit">Create PDF</button>
+</form>
