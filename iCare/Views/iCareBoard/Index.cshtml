@@ -6,10 +6,13 @@
 
 <h1>iCare Board</h1>
 
+<!-- Button to create a new patient -->
+<a asp-action="Create" class="btn btn-primary mb-3">Create New Patient</a>
+
 <table class="table">
     <thead>
         <tr>
-            <th>Actions</th> <!-- New column for the Edit and View Records buttons -->
+            <th>Actions</th> <!-- Column for the Edit and View Records buttons -->
             <th>Id</th>
             <th>Name</th>
             <th>Date of Birth</th>
@@ -30,7 +33,7 @@
                 </td>
                 <td>@patient.Id</td>
                 <td>@patient.Name</td>
-                <td>@patient.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                <td>@patient.DateOfBirth.ToString("yyyy-MM-dd")</td> <!-- Updated to match 'Dob' property -->
                 <td>@patient.Address</td>
                 <td>@patient.BloodGroup</td>
                 <td>@patient.TreatmentArea</td>

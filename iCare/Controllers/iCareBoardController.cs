@@ -8,6 +8,7 @@ using iText.Kernel.Pdf; // iText 7
 using iText.Layout;
 using iText.Layout.Element;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting;
 
 namespace iCare.Controllers
 {
@@ -22,6 +23,29 @@ namespace iCare.Controllers
             _context = context;
             _env = env;
             _logger = logger;
+        }
+
+        // GET: iCareBoard/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: iCareBoard/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Patient patient)
+        {
+            if (ModelState.IsValid)
+            {
+                _logger.LogInformation("Creating new patient: {PatientName}", patient.Name);
+                _context.Patients.Add(patient);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Patient created successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            _logger.LogWarning("Invalid model state for patient creation.");
+            return View(patient);
         }
 
         // GET: iCareBoard
@@ -81,7 +105,6 @@ namespace iCare.Controllers
             return View(pdfFiles);
         }
 
-        // POST: iCareBoard/CreatePdf
         // POST: iCareBoard/CreatePdf
         [HttpPost]
         [ValidateAntiForgeryToken]
