@@ -12,7 +12,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Actions</th> <!-- Column for the Edit and View Records buttons -->
+            <th>Actions</th> <!-- Column for Edit, View Records, and View Patient buttons -->
             <th>Id</th>
             <th>Name</th>
             <th>Date of Birth</th>
@@ -30,10 +30,12 @@
                     <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-secondary">Edit</a>
                     <!-- View Records button for each patient -->
                     <a asp-action="Records" asp-route-patientId="@patient.Id" class="btn btn-info">View Records</a>
+                    <!-- New View Patient button for each patient -->
+                    <a asp-action="ViewPatient" asp-route-id="@patient.Id" class="btn btn-success">View Patient</a>
                 </td>
                 <td>@patient.Id</td>
                 <td>@patient.Name</td>
-                <td>@patient.DateOfBirth.ToString("yyyy-MM-dd")</td> <!-- Updated to match 'Dob' property -->
+                <td>@patient.DateOfBirth.ToString("yyyy-MM-dd")</td>
                 <td>@patient.Address</td>
                 <td>@patient.BloodGroup</td>
                 <td>@patient.TreatmentArea</td>

@@ -1,0 +1,22 @@
+﻿@model iCare.Models.Patient
+
+@{
+    ViewData["Title"] = "Patient Details";
+}
+
+<h1>Patient Details</h1>
+
+<div>
+    <h3>@Model.Name</h3>
+    <p><strong>Date of Birth:</strong> @Model.DateOfBirth.ToString("yyyy-MM-dd")</p>
+    <p><strong>Address:</strong> @Model.Address</p>
+    <p><strong>Blood Group:</strong> @Model.BloodGroup</p>
+    <p><strong>Treatment Area:</strong> @Model.TreatmentArea</p>
+</div>
+
+<div class="mt-4">
+    <!-- Manage Documents button -->
+    <a asp-action="ManageDocuments" asp-route-patientId="@Model.Id" class="btn btn-primary">Manage Documents</a>
+    <!-- Manage Treatment button -->
+    <a asp-action="ManageTreatment" asp-route-patientId="@Model.Id" class="btn btn-secondary">Manage Treatment</a>
+</div>
