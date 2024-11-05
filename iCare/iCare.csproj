@@ -19,6 +19,7 @@
     <Folder Include="Views\Doctor\" />
     <Folder Include="Views\Nurse\" />
     <Folder Include="Views\iCareBoard\" />
+    <Folder Include="Views\TreatmentRecord\" />
   </ItemGroup>
 
   <!-- Excluding models from single file publishing and specifying that they're copied during publishing -->
@@ -60,5 +61,6 @@
     <None Remove="itext7" />
     <None Remove="iTextSharp" />
     <None Remove="itext7.bouncy-castle-adapter" />
+    <None Remove="Views\TreatmentRecord\" />
   </ItemGroup>
 </Project>

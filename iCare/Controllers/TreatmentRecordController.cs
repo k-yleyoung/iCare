@@ -20,7 +20,7 @@ namespace iCare.Controllers
         // GET: TreatmentRecord/ManageTreatment/5
         public IActionResult ManageTreatment(int patientId)
         {
-            var patient = _context.Patients.Find(patientId);
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientId);
             if (patient == null)
             {
                 return NotFound();
@@ -38,7 +38,7 @@ namespace iCare.Controllers
         // GET: TreatmentRecord/Create/5
         public IActionResult Create(int patientId)
         {
-            var patient = _context.Patients.Find(patientId);
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientId);
             if (patient == null)
             {
                 return NotFound();
@@ -51,7 +51,9 @@ namespace iCare.Controllers
             };
 
             ViewBag.Patient = patient;
-            ViewBag.Doctors = new SelectList(_context.Users.Where(u => u.Role.Equals("doctor", StringComparison.OrdinalIgnoreCase)), "Id", "Username");
+            ViewBag.Doctors = new SelectList(
+                _context.Users.Where(u => u.Role.Equals("doctor", StringComparison.OrdinalIgnoreCase)),
+                "Id", "Username");
             return View(patientRecord);
         }
 
@@ -66,8 +68,16 @@ namespace iCare.Controllers
                 return RedirectToAction(nameof(ManageTreatment), new { patientId = patientRecord.PatientId });
             }
             // Repopulate ViewBag in case of validation errors
-            ViewBag.Patient = _context.Patients.Find(patientRecord.PatientId);
-            ViewBag.Doctors = new SelectList(_context.Users.Where(u => u.Role.Equals("doctor", StringComparison.OrdinalIgnoreCase)), "Id", "Username", patientRecord.DoctorId);
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientRecord.PatientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Patient = patient;
+
+            ViewBag.Doctors = new SelectList(
+                _context.Users.Where(u => u.Role.Equals("doctor", StringComparison.OrdinalIgnoreCase)),
+                "Id", "Username", patientRecord.DoctorId);
             return View(patientRecord);
         }
 
@@ -79,7 +89,19 @@ namespace iCare.Controllers
             {
                 return NotFound();
             }
-            ViewBag.Doctors = new SelectList(_context.Users.Where(u => u.Role.Equals("doctor", StringComparison.OrdinalIgnoreCase)), "Id", "Username", patientRecord.DoctorId);
+
+            // Retrieve the patient information
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientRecord.PatientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Patient = patient;
+
+            ViewBag.Doctors = new SelectList(
+                _context.Users.Where(u => u.Role.Equals("doctor", StringComparison.OrdinalIgnoreCase)),
+                "Id", "Username", patientRecord.DoctorId);
+
             return View(patientRecord);
         }
 
@@ -93,7 +115,19 @@ namespace iCare.Controllers
                 _context.SaveChanges();
                 return RedirectToAction(nameof(ManageTreatment), new { patientId = patientRecord.PatientId });
             }
-            ViewBag.Doctors = new SelectList(_context.Users.Where(u => u.Role.Equals("doctor", StringComparison.OrdinalIgnoreCase)), "Id", "Username", patientRecord.DoctorId);
+
+            // Repopulate ViewBag in case of validation errors
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientRecord.PatientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Patient = patient;
+
+            ViewBag.Doctors = new SelectList(
+                _context.Users.Where(u => u.Role.Equals("doctor", StringComparison.OrdinalIgnoreCase)),
+                "Id", "Username", patientRecord.DoctorId);
+
             return View(patientRecord);
         }
 
@@ -105,6 +139,15 @@ namespace iCare.Controllers
             {
                 return NotFound();
             }
+
+            // Retrieve the patient information
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == patientRecord.PatientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Patient = patient;
+
             return View(patientRecord);
         }
 
@@ -115,9 +158,10 @@ namespace iCare.Controllers
             var patientRecord = _context.PatientRecords.FirstOrDefault(pr => pr.RecordId == id);
             if (patientRecord != null)
             {
+                int patientId = patientRecord.PatientId;
                 _context.PatientRecords.Remove(patientRecord);
                 _context.SaveChanges();
-                return RedirectToAction(nameof(ManageTreatment), new { patientId = patientRecord.PatientId });
+                return RedirectToAction(nameof(ManageTreatment), new { patientId = patientId });
             }
             return NotFound();
         }
