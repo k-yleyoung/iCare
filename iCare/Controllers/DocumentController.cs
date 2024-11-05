@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// DocumentController.cs
+
 using iCare.Data;
 using iCare.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace iCare.Controllers
 {
@@ -13,40 +17,80 @@ namespace iCare.Controllers
             _context = context;
         }
 
-        public IActionResult Upload()
+        // GET: Document/ManageDocuments/5
+        public IActionResult ManageDocuments(int patientId)
         {
-            return View();
+            var patient = _context.Patients.Find(patientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            var documents = _context.Documents
+                .Where(d => d.PatientId == patientId)
+                .ToList();
+
+            ViewBag.Patient = patient;
+            return View(documents);
         }
 
-        [HttpPost]
-        public IActionResult Upload(IFormFile file)
+        // GET: Document/UploadDocument/5
+        public IActionResult UploadDocument(int patientId)
         {
-            if (file != null && file.Length > 0)
+            var model = new UploadDocumentViewModel
             {
-                using (var ms = new MemoryStream())
+                PatientId = patientId
+            };
+            return View(model);
+        }
+
+        // POST: Document/UploadDocument
+        [HttpPost]
+        public async Task<IActionResult> UploadDocument(UploadDocumentViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.File != null && model.File.Length > 0)
                 {
-                    file.CopyTo(ms);
-                    var fileBytes = ms.ToArray();
-
-                    var document = new Document
+                    using (var memoryStream = new MemoryStream())
                     {
-                        FileName = file.FileName,
-                        FileContent = fileBytes,
-                        ContentType = file.ContentType
-                    };
+                        await model.File.CopyToAsync(memoryStream);
 
-                    _context.Documents.Add(document);
-                    _context.SaveChanges();
+                        var document = new Document
+                        {
+                            PatientId = model.PatientId,
+                            DocName = model.File.FileName,
+                            DocType = model.File.ContentType,
+                            CreatedAt = DateTime.Now,
+                            Content = memoryStream.ToArray()
+                        };
+
+                        _context.Documents.Add(document);
+                        await _context.SaveChangesAsync();
+
+                        return RedirectToAction("ManageDocuments", new { patientId = model.PatientId });
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("File", "Please select a file to upload.");
                 }
             }
 
-            return RedirectToAction(nameof(List));
+            ViewBag.PatientId = model.PatientId;
+            return View(model);
         }
 
-        public IActionResult List()
+        // GET: Document/DownloadDocument/5
+        public async Task<IActionResult> DownloadDocument(int id)
         {
-            var documents = _context.Documents.ToList();
-            return View(documents);
+            var document = await _context.Documents.FindAsync(id);
+            if (document == null)
+            {
+                return NotFound();
+            }
+
+            return File(document.Content, document.DocType, document.DocName);
         }
     }
 }

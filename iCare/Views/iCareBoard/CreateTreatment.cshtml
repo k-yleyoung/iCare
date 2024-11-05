@@ -1,0 +1,28 @@
+﻿@model iCare.Models.PatientRecord
+
+@{
+    ViewData["Title"] = "Add Treatment";
+    var patient = ViewBag.Patient as iCare.Models.Patient;
+}
+
+<h1>Add Treatment for @patient.Name</h1>
+
+<form asp-action="Create">
+    <input type="hidden" asp-for="PatientId" />
+    <div class="form-group">
+        <label asp-for="RecordDate"></label>
+        <input asp-for="RecordDate" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="TreatmentDetails"></label>
+        <textarea asp-for="TreatmentDetails" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="DoctorId">Doctor</label>
+        <select asp-for="DoctorId" class="form-control" asp-items="ViewBag.Doctors">
+            <option value="">-- Select Doctor --</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="ManageTreatment" asp-route-patientId="@Model.PatientId" class="btn btn-secondary">Cancel</a>
+</form>

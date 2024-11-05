@@ -1,25 +1,61 @@
 ﻿@model iCare.Models.Patient
 
-<h2>Create New Patient</h2>
+@{
+    ViewData["Title"] = "Create New Patient";
+}
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<h1>Create New Patient</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="control-label">Date of Birth</label>
+                <input asp-for="DateOfBirth" type="date" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BloodGroup" class="control-label">Blood Group</label>
+                <input asp-for="BloodGroup" class="form-control" />
+                <span asp-validation-for="BloodGroup" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TreatmentArea" class="control-label">Treatment Area</label>
+                <input asp-for="TreatmentArea" class="form-control" />
+                <span asp-validation-for="TreatmentArea" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssignedDoctorId" class="control-label">Assigned Doctor</label>
+                <select asp-for="AssignedDoctorId" class="form-control" asp-items="ViewBag.Doctors">
+                    <option value="">-- Select Doctor --</option>
+                </select>
+                <span asp-validation-for="AssignedDoctorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssignedNurseId" class="control-label">Assigned Nurse</label>
+                <select asp-for="AssignedNurseId" class="form-control" asp-items="ViewBag.Nurses">
+                    <option value="">-- Select Nurse --</option>
+                </select>
+                <span asp-validation-for="AssignedNurseId" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a asp-action="List" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="Address"></label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="DateOfBirth"></label>
-        <input asp-for="DateOfBirth" class="form-control" type="date" />
-        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

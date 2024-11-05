@@ -34,9 +34,23 @@
                 <input asp-for="TreatmentArea" class="form-control" />
                 <span asp-validation-for="TreatmentArea" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="AssignedDoctorId" class="control-label">Assigned Doctor</label>
+                <select asp-for="AssignedDoctorId" class="form-control" asp-items="ViewBag.Doctors">
+                    <option value="">-- Select Doctor --</option>
+                </select>
+                <span asp-validation-for="AssignedDoctorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssignedNurseId" class="control-label">Assigned Nurse</label>
+                <select asp-for="AssignedNurseId" class="form-control" asp-items="ViewBag.Nurses">
+                    <option value="">-- Select Nurse --</option>
+                </select>
+                <span asp-validation-for="AssignedNurseId" class="text-danger"></span>
+            </div>
             <div class="form-group mt-3">
                 <button type="submit" class="btn btn-primary">Create</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                <a asp-action="List" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>

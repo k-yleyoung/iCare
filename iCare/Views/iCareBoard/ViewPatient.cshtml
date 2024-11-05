@@ -12,11 +12,17 @@
     <p><strong>Address:</strong> @Model.Address</p>
     <p><strong>Blood Group:</strong> @Model.BloodGroup</p>
     <p><strong>Treatment Area:</strong> @Model.TreatmentArea</p>
+    <p><strong>Assigned Doctor:</strong> @Model.AssignedDoctorName</p>
+    <p><strong>Assigned Nurse:</strong> @Model.AssignedNurseName</p>
 </div>
 
 <div class="mt-4">
     <!-- Manage Documents button -->
-    <a asp-action="ManageDocuments" asp-route-patientId="@Model.Id" class="btn btn-primary">Manage Documents</a>
+    <a asp-controller="Document" asp-action="ManageDocuments" asp-route-patientId="@Model.Id" class="btn btn-primary">Manage Documents</a>
     <!-- Manage Treatment button -->
-    <a asp-action="ManageTreatment" asp-route-patientId="@Model.Id" class="btn btn-secondary">Manage Treatment</a>
+    <a asp-controller="TreatmentRecord" asp-action="ManageTreatment" asp-route-patientId="@Model.Id" class="btn btn-secondary">Manage Treatment</a>
+    <!-- Edit Patient button -->
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info">Edit Patient</a>
+    <!-- Back to List button -->
+    <a asp-action="List" class="btn btn-secondary">Back to List</a>
 </div>

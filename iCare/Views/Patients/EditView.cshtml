@@ -1,29 +1,49 @@
-﻿@model iCare.Models.PatientViewModel
+﻿@model iCare.Models.Patient
 
 @{
     ViewData["Title"] = "Edit Patient";
 }
 
-<h2>Edit Patient</h2>
+<h1>Edit Patient</h1>
 
 <form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
     <div class="form-group">
-        <label asp-for="Name"></label>
+        <label asp-for="Name" class="control-label"></label>
         <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <label asp-for="Address"></label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="DateOfBirth"></label>
+        <label asp-for="DateOfBirth" class="control-label"></label>
         <input asp-for="DateOfBirth" class="form-control" type="date" />
-        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
     </div>
-
+    <div class="form-group">
+        <label asp-for="Address" class="control-label"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="BloodGroup" class="control-label"></label>
+        <input asp-for="BloodGroup" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="TreatmentArea" class="control-label"></label>
+        <input asp-for="TreatmentArea" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="AssignedDoctorId" class="control-label">Assigned Doctor</label>
+        <select asp-for="AssignedDoctorId" class="form-control" asp-items="ViewBag.Doctors">
+            <option value="">-- Select Doctor --</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="AssignedNurseId" class="control-label">Assigned Nurse</label>
+        <select asp-for="AssignedNurseId" class="form-control" asp-items="ViewBag.Nurses">
+            <option value="">-- Select Nurse --</option>
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="List" class="btn btn-secondary">Cancel</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
