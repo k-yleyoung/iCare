@@ -15,7 +15,9 @@
                 <h4>@patient.Name (@patient.BloodGroup)</h4>
                 <p>Assigned Location: @patient.TreatmentArea</p>
                 <p>DOB: @patient.DateOfBirth.ToShortDateString()</p>
-                <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-info">View Patient</a>
+                <a asp-action="ViewPatient" asp-route-id="@patient.Id" class="btn btn-success btn-sm">
+                    <i class="fas fa-user"></i> View Patient
+                </a>
             </li>
         }
     </ul>
