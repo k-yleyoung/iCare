@@ -6,7 +6,8 @@
 
 <h1>Edit Patient</h1>
 
-<form asp-action="Edit" method="post">
+<form asp-controller="iCareBoard" asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" /> <!-- Hidden field for patient ID -->
     <div class="form-group">
         <label asp-for="Name" class="control-label"></label>
         <input asp-for="Name" class="form-control" />
@@ -27,9 +28,23 @@
         <label asp-for="TreatmentArea" class="control-label"></label>
         <input asp-for="TreatmentArea" class="form-control" />
     </div>
-
-    <input type="hidden" asp-for="Id" /> <!-- Hidden field for patient ID -->
-
+    <!-- Optional: Edit Assigned Doctor and Nurse -->
+    <div class="form-group">
+        <label asp-for="AssignedDoctorId" class="control-label">Assigned Doctor</label>
+        <select asp-for="AssignedDoctorId" class="form-control" asp-items="ViewBag.Doctors">
+            <option value="">-- Select Doctor --</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="AssignedNurseId" class="control-label">Assigned Nurse</label>
+        <select asp-for="AssignedNurseId" class="form-control" asp-items="ViewBag.Nurses">
+            <option value="">-- Select Nurse --</option>
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Save Changes</button>
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -2,42 +2,174 @@
 
 @{
     ViewData["Title"] = "iCare Board";
+    var treatmentAreas = Model.Select(p => p.TreatmentArea).Distinct().OrderBy(area => area).ToList();
 }
 
-<h1>iCare Board</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- Button to create a new patient -->
-<a asp-action="Create" class="btn btn-primary mb-3">Create New Patient</a>
+    <!-- Page Title -->
+    <title>@ViewData["Title"] - iCare Application</title>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Actions</th> <!-- Column for the Edit and View Records buttons -->
-            <th>Id</th>
-            <th>Name</th>
-            <th>Date of Birth</th>
-            <th>Address</th>
-            <th>Blood Group</th>
-            <th>Treatment Area</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var patient in Model)
-        {
-            <tr>
-                <td>
-                    <!-- Edit button for each patient -->
-                    <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-secondary">Edit</a>
-                    <!-- View Records button for each patient -->
-                    <a asp-action="Records" asp-route-patientId="@patient.Id" class="btn btn-info">View Records</a>
-                </td>
-                <td>@patient.Id</td>
-                <td>@patient.Name</td>
-                <td>@patient.DateOfBirth.ToString("yyyy-MM-dd")</td> <!-- Updated to match 'Dob' property -->
-                <td>@patient.Address</td>
-                <td>@patient.BloodGroup</td>
-                <td>@patient.TreatmentArea</td>
-            </tr>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Using 'Poppins' font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Inline CSS -->
+    <style>
+        /* Gradient Background */
+        body {
+            background: linear-gradient(to bottom right, #87ceeb, #e0ffff);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
         }
-    </tbody>
-</table>
+
+        /* Container Styles */
+        .container {
+            margin-top: 60px;
+            max-width: 1200px;
+        }
+
+        /* Heading Styles */
+        h1 {
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Dropdown Styles */
+        .filter-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Table Styles */
+        .table {
+            background-color: #ffffff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .table th, .table td {
+                vertical-align: middle !important;
+            }
+
+            .table thead th {
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+            }
+
+        .btn {
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
+
+        /* Responsive Adjustments */
+        @@media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>iCare Board</h1>
+
+        <!-- Dropdown for Treatment Area Filtering -->
+        <div class="filter-container">
+            <label for="treatmentAreaFilter" class="font-weight-bold">Filter by Treatment Area:</label>
+            <select id="treatmentAreaFilter" class="form-control d-inline w-auto" onchange="filterByTreatmentArea()">
+                <option value="All">All</option>
+                @foreach (var area in treatmentAreas)
+                {
+                    <option value="@area">@area</option>
+                }
+            </select>
+        </div>
+
+        <!-- Table of Patients -->
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Actions</th>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Date of Birth</th>
+                        <th>Address</th>
+                        <th>Blood Group</th>
+                        <th>Treatment Area</th>
+                    </tr>
+                </thead>
+                <tbody id="patientTableBody">
+                    @foreach (var patient in Model)
+                    {
+                        <tr class="patient-row" data-treatment-area="@patient.TreatmentArea">
+                            <td data-label="Actions">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-secondary btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a asp-action="Records" asp-route-patientId="@patient.Id" class="btn btn-info btn-sm">
+                                        <i class="fas fa-file-medical-alt"></i> View Records
+                                    </a>
+                                    <a asp-action="ViewPatient" asp-route-id="@patient.Id" class="btn btn-success btn-sm">
+                                        <i class="fas fa-user"></i> View Patient
+                                    </a>
+                                </div>
+                            </td>
+                            <td data-label="Id">@patient.Id</td>
+                            <td data-label="Name">@patient.Name</td>
+                            <td data-label="Date of Birth">@patient.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                            <td data-label="Address">@patient.Address</td>
+                            <td data-label="Blood Group">@patient.BloodGroup</td>
+                            <td data-label="Treatment Area">@patient.TreatmentArea</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Include jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript for Filtering Patients by Treatment Area -->
+    <script>function filterByTreatmentArea() {
+            const selectedArea = document.getElementById("treatmentAreaFilter").value;
+            const rows = document.querySelectorAll(".patient-row");
+
+            rows.forEach(row => {
+                const treatmentArea = row.getAttribute("data-treatment-area");
+                if (selectedArea === "All" || treatmentArea === selectedArea) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }</script>
+</body>
+</html>

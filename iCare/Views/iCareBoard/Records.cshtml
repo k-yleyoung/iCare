@@ -22,8 +22,15 @@ else
     <p>No records found for this patient.</p>
 }
 
-<form asp-action="CreatePdf" method="post">
-    <input type="hidden" name="patientId" value="@ViewBag.PatientId" />
-    <textarea name="documentContent" placeholder="Enter document content here"></textarea>
-    <button type="submit">Create PDF</button>
+<h3>Create New Record</h3>
+<form asp-action="SaveRecord" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="PatientId" value="@ViewBag.PatientId" />
+
+    <label for="DocumentContent">Document Content (Text):</label>
+    <textarea id="DocumentContent" name="DocumentContent" placeholder="Enter document content here"></textarea>
+
+    <label for="DocumentImage">Upload Image:</label>
+    <input type="file" id="DocumentImage" name="DocumentImage" accept="image/*" />
+
+    <button type="submit">Save Record</button>
 </form>

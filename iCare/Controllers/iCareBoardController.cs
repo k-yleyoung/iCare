@@ -100,7 +100,7 @@ namespace iCare.Controllers
             var pdfFiles = Directory.Exists(pdfFolder) ?
                 Directory.GetFiles(pdfFolder).Select(Path.GetFileName).ToList() : new List<string>();
 
-            ViewBag.PatientId = patientId; // Set PatientId here
+            ViewBag.PatientId = patientId;
             ViewBag.PatientName = patient.Name;
             return View(pdfFiles);
         }
@@ -133,7 +133,6 @@ namespace iCare.Controllers
                 {
                     using (var pdf = new PdfDocument(writer))
                     {
-                        // Specify the namespace for Document from iText.Layout
                         var document = new iText.Layout.Document(pdf);
                         document.Add(new Paragraph(documentContent));
                     }
@@ -148,7 +147,6 @@ namespace iCare.Controllers
 
             return RedirectToAction(nameof(Records), new { patientId });
         }
-
 
         // POST: iCareBoard/AssignPatients
         [HttpPost]
@@ -193,6 +191,34 @@ namespace iCare.Controllers
                 .ToList();
 
             return View(assignedPatients);
+        }
+
+        // GET: iCareBoard/ViewPatient/5
+        public IActionResult ViewPatient(int id)
+        {
+            var patient = _context.Patients.FirstOrDefault(p => p.Id == id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return View(patient);
+        }
+
+        // GET: iCareBoard/ManageDocuments/5
+        public IActionResult ManageDocuments(int patientId)
+        {
+            var documents = _context.Documents.Where(d => d.PatientId == patientId).ToList();
+            ViewBag.PatientId = patientId;
+            return View(documents);
+        }
+
+        // GET: iCareBoard/ManageTreatment/5
+        public IActionResult ManageTreatment(int patientId)
+        {
+            var treatmentRecords = _context.PatientRecords.Where(r => r.PatientId == patientId).ToList();
+            ViewBag.PatientId = patientId;
+            return View(treatmentRecords);
         }
     }
 }
