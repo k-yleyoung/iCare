@@ -14,7 +14,7 @@
                 <h3>iCare Board</h3>
                 <a href="@Url.Action("Index", "iCareBoard")" class="btn btn-primary">View iCare Board</a>
 
-                <!-- Show "Assign Patient" if user is a Doctor or Nurse -->
+                @* Show "Assign Patient" if user is a Doctor or Nurse *@
                 @if (User.IsInRole("Doctor") || User.IsInRole("Nurse"))
                 {
                     <form asp-action="AssignPatients" method="post" style="margin-top:10px;">
@@ -22,15 +22,15 @@
                     </form>
                 }
 
-                <!-- Show "Edit Patient" if user is an Admin -->
+                @* Show "Edit Patient" if user is an Admin *@
                 @if (User.IsInRole("Admin"))
                 {
                     <a href="@Url.Action("EditPatient", "iCareBoard")" class="btn btn-danger" style="margin-top:10px;">Edit Patient</a>
                 }
             </div>
 
-            <!-- myCare Board, only visible for Doctors and Nurses -->
-            @if (User.IsInRole("Doctor") || User.IsInRole("Nurse"))
+            <!-- myCare Board -->
+            @if (!User.IsInRole("Admin"))
             {
                 <div class="col-md-6">
                     <h3>myCare Board</h3>
@@ -39,6 +39,37 @@
             }
         </div>
     </div>
+
+    <!-- Drug Search Feature -->
+    <div class="mt-5">
+        <h2>Drug Search</h2>
+        <input type="text" id="drugSearchInput" placeholder="Search for a drug..." class="form-control" />
+        <button onclick="searchDrug()" class="btn btn-primary mt-2">Search</button>
+        <div id="drugInfo" class="mt-4"></div>
+    </div>
+
+    <script>
+        async function searchDrug() {
+            const query = document.getElementById('drugSearchInput').value;
+            const response = await fetch(`/api/drugs/search?query=${encodeURIComponent(query)}`); // Updated URL
+
+            const drugInfoDiv = document.getElementById('drugInfo');
+            drugInfoDiv.innerHTML = ''; // Clear previous results
+
+            if (response.ok) {
+                const drug = await response.json();
+                drugInfoDiv.innerHTML = `
+                            <h3>${drug.name}</h3>
+                            <p><strong>Description:</strong> ${drug.description}</p>
+                            <p><strong>Dosage:</strong> ${drug.dosage}</p>
+                            <p><strong>Category:</strong> ${drug.category}</p>
+                            <p><strong>Side Effects:</strong> ${drug.sideEffects.join(", ")}</p>
+                        `;
+            } else {
+                drugInfoDiv.innerHTML = `<p class="text-danger">Drug not found.</p>`;
+            }
+        }
+    </script>
 }
 else
 {

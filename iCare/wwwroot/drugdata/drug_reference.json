@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Aspirin",
+    "description": "Pain reliever and anti-inflammatory.",
+    "sideEffects": [ "Nausea", "Stomach pain" ],
+    "dosage": "50mg - 400mg",
+    "category": "Analgesic"
+  },
+  {
+    "name": "Ibuprofen",
+    "description": "Nonsteroidal anti-inflammatory drug.",
+    "sideEffects": [ "Dizziness", "Indigestion" ],
+    "dosage": "100mg - 800mg",
+    "category": "NSAID"
+  }
+]
