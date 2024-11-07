@@ -6,7 +6,7 @@
 
 <h1>Edit Patient</h1>
 
-<form asp-action="Edit" method="post">
+<form asp-controller="iCareBoard" asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" /> <!-- Hidden field for patient ID -->
     <div class="form-group">
         <label asp-for="Name" class="control-label"></label>
