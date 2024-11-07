@@ -30,12 +30,45 @@
             </div>
 
             <!-- myCare Board -->
-            <div class="col-md-6">
-                <h3>myCare Board</h3>
-                <a href="@Url.Action("myCareBoard", "iCareBoard")" class="btn btn-secondary">View myCare Board</a>
-            </div>
+            @if (!User.IsInRole("Admin"))
+            {
+                <div class="col-md-6">
+                    <h3>myCare Board</h3>
+                    <a href="@Url.Action("myCareBoard", "iCareBoard")" class="btn btn-secondary">View myCare Board</a>
+                </div>
         </div>
     </div>
+
+    <!-- Drug Search Feature -->
+    <div class="mt-5">
+        <h2>Drug Search</h2>
+        <input type="text" id="drugSearchInput" placeholder="Search for a drug..." class="form-control" />
+        <button onclick="searchDrug()" class="btn btn-primary mt-2">Search</button>
+        <div id="drugInfo" class="mt-4"></div>
+    </div>
+
+    <script>
+        async function searchDrug() {
+            const query = document.getElementById('drugSearchInput').value;
+            const response = await fetch(`/api/drugs/search?query=${encodeURIComponent(query)}`); // Updated URL
+
+            const drugInfoDiv = document.getElementById('drugInfo');
+            drugInfoDiv.innerHTML = ''; // Clear previous results
+
+            if (response.ok) {
+                const drug = await response.json();
+                drugInfoDiv.innerHTML = `
+                            <h3>${drug.name}</h3>
+                            <p><strong>Description:</strong> ${drug.description}</p>
+                            <p><strong>Dosage:</strong> ${drug.dosage}</p>
+                            <p><strong>Category:</strong> ${drug.category}</p>
+                            <p><strong>Side Effects:</strong> ${drug.sideEffects.join(", ")}</p>
+                        `;
+            } else {
+                drugInfoDiv.innerHTML = `<p class="text-danger">Drug not found.</p>`;
+            }
+        }
+    </script>
 }
 else
 {
