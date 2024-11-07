@@ -36,6 +36,7 @@
                     <h3>myCare Board</h3>
                     <a href="@Url.Action("myCareBoard", "iCareBoard")" class="btn btn-secondary">View myCare Board</a>
                 </div>
+            }
         </div>
     </div>
 
@@ -50,7 +51,7 @@
     <script>
         async function searchDrug() {
             const query = document.getElementById('drugSearchInput').value;
-            const response = await fetch(`/api/drugs/search?query=${encodeURIComponent(query)}`); // Updated URL
+            const response = await fetch(`/api/drugs/search?query=${encodeURIComponent(query)}`);
 
             const drugInfoDiv = document.getElementById('drugInfo');
             drugInfoDiv.innerHTML = ''; // Clear previous results
@@ -58,12 +59,12 @@
             if (response.ok) {
                 const drug = await response.json();
                 drugInfoDiv.innerHTML = `
-                            <h3>${drug.name}</h3>
-                            <p><strong>Description:</strong> ${drug.description}</p>
-                            <p><strong>Dosage:</strong> ${drug.dosage}</p>
-                            <p><strong>Category:</strong> ${drug.category}</p>
-                            <p><strong>Side Effects:</strong> ${drug.sideEffects.join(", ")}</p>
-                        `;
+                    <h3>${drug.name}</h3>
+                    <p><strong>Description:</strong> ${drug.description}</p>
+                    <p><strong>Dosage:</strong> ${drug.dosage}</p>
+                    <p><strong>Category:</strong> ${drug.category}</p>
+                    <p><strong>Side Effects:</strong> ${drug.sideEffects.join(", ")}</p>
+                `;
             } else {
                 drugInfoDiv.innerHTML = `<p class="text-danger">Drug not found.</p>`;
             }
