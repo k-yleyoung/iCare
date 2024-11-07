@@ -2,54 +2,141 @@
     ViewData["Title"] = "Home";
 }
 
-<h1>Welcome to the iCare Application!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - iCare Application</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Gradient Background */
+        body {
+            background: linear-gradient(to bottom right, #87ceeb, #e0ffff);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
 
-@if (User.Identity.IsAuthenticated)
-{
-    <p>Access your boards below:</p>
+        .container {
+            margin-top: 60px;
+            max-width: 1200px;
+        }
+
+        h1, h2 {
+            font-weight: 600;
+            text-align: center;
+            color: #007bff;
+            text-shadow: 2px 2px #b3d7ff;
+            margin-bottom: 30px;
+        }
+
+        .board-btn {
+            width: 100%;
+            margin-bottom: 10px;
+            background-color: #28a745; /* Green color */
+            border: none;
+            color: white;
+        }
+
+            .board-btn:hover {
+                background-color: #218838; /* Darker green */
+            }
+
+        .drug-search {
+            margin-top: 50px;
+        }
+
+        .drug-info h3 {
+            margin-top: 20px;
+        }
+
+        .btn-custom {
+            background-color: #28a745; /* Green color */
+            color: white;
+        }
+
+            .btn-custom:hover {
+                background-color: #218838; /* Darker green */
+            }
+
+        .card {
+            border: 2px solid #007bff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
     <div class="container">
-        <div class="row">
-            <!-- iCare Board -->
-            <div class="col-md-6">
-                <h3>iCare Board</h3>
-                <a href="@Url.Action("Index", "iCareBoard")" class="btn btn-primary">View iCare Board</a>
+        <h1>Welcome to the iCare Application!</h1>
 
-                @* Show "Assign Patient" if user is a Doctor or Nurse *@
-                @if (User.IsInRole("Doctor") || User.IsInRole("Nurse"))
-                {
-                    <form asp-action="AssignPatients" method="post" style="margin-top:10px;">
-                        <button type="submit" class="btn btn-warning">Assign Patient</button>
-                    </form>
-                }
+        @if (User.Identity.IsAuthenticated)
+        {
+            <p class="text-center">Access your boards below:</p>
+            <div class="row">
+                <!-- iCare Board -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">iCare Board</h3>
+                            <a href="@Url.Action("Index", "iCareBoard")" class="btn btn-custom board-btn">View iCare Board</a>
 
-                @* Show "Edit Patient" if user is an Admin *@
-                @if (User.IsInRole("Admin"))
+                            @* Show "Assign Patient" if user is a Doctor or Nurse *@
+                            @if (User.IsInRole("Doctor") || User.IsInRole("Nurse"))
+                            {
+                                <form asp-action="AssignPatients" method="post" style="margin-top:10px;">
+                                    <button type="submit" class="btn btn-warning board-btn">Assign Patient</button>
+                                </form>
+                            }
+
+                            @* Show "Edit Patient" if user is an Admin *@
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a href="@Url.Action("EditPatient", "iCareBoard")" class="btn btn-danger board-btn" style="margin-top:10px;">Edit Patient</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- myCare Board -->
+                @if (!User.IsInRole("Admin"))
                 {
-                    <a href="@Url.Action("EditPatient", "iCareBoard")" class="btn btn-danger" style="margin-top:10px;">Edit Patient</a>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">myCare Board</h3>
+                                <a href="@Url.Action("myCareBoard", "iCareBoard")" class="btn btn-secondary board-btn">View myCare Board</a>
+                            </div>
+                        </div>
+                    </div>
                 }
             </div>
 
-            <!-- myCare Board -->
-            @if (!User.IsInRole("Admin"))
-            {
-                <div class="col-md-6">
-                    <h3>myCare Board</h3>
-                    <a href="@Url.Action("myCareBoard", "iCareBoard")" class="btn btn-secondary">View myCare Board</a>
-                </div>
-            }
-        </div>
+            <!-- Drug Search Feature -->
+            <div class="drug-search">
+                <h2>Drug Search</h2>
+                <input type="text" id="drugSearchInput" placeholder="Search for a drug..." class="form-control" />
+                <button onclick="searchDrug()" class="btn btn-custom mt-2">Search</button>
+                <div id="drugInfo" class="mt-4"></div>
+            </div>
+        }
+        else
+        {
+            <p class="text-center">You need to log in to access the boards.</p>
+        }
     </div>
 
-    <!-- Drug Search Feature -->
-    <div class="mt-5">
-        <h2>Drug Search</h2>
-        <input type="text" id="drugSearchInput" placeholder="Search for a drug..." class="form-control" />
-        <button onclick="searchDrug()" class="btn btn-primary mt-2">Search</button>
-        <div id="drugInfo" class="mt-4"></div>
-    </div>
-
-    <script>
-        async function searchDrug() {
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>async function searchDrug() {
             const query = document.getElementById('drugSearchInput').value;
             const response = await fetch(`/api/drugs/search?query=${encodeURIComponent(query)}`);
 
@@ -59,19 +146,15 @@
             if (response.ok) {
                 const drug = await response.json();
                 drugInfoDiv.innerHTML = `
-                    <h3>${drug.name}</h3>
-                    <p><strong>Description:</strong> ${drug.description}</p>
-                    <p><strong>Dosage:</strong> ${drug.dosage}</p>
-                    <p><strong>Category:</strong> ${drug.category}</p>
-                    <p><strong>Side Effects:</strong> ${drug.sideEffects.join(", ")}</p>
-                `;
+                        <h3>${drug.name}</h3>
+                        <p><strong>Description:</strong> ${drug.description}</p>
+                        <p><strong>Dosage:</strong> ${drug.dosage}</p>
+                        <p><strong>Category:</strong> ${drug.category}</p>
+                        <p><strong>Side Effects:</strong> ${drug.sideEffects.join(", ")}</p>
+                    `;
             } else {
                 drugInfoDiv.innerHTML = `<p class="text-danger">Drug not found.</p>`;
             }
-        }
-    </script>
-}
-else
-{
-    <p>You need to log in to access the boards.</p>
-}
+        }</script>
+</body>
+</html>
