@@ -7,23 +7,24 @@ namespace iCare.Models
     public class Document
     {
         [Key]
-        [Column("doc_id")]
-        public int DocId { get; set; }  // Maps to 'doc_id' in the database
+        public int DocId { get; set; }  // Maps to 'doc_id' in Documents table
 
-        [Column("patient_id")]
-        public int PatientId { get; set; }  // Maps to 'patient_id' in the database
+        [Required]
+        public int PatientId { get; set; }  // Maps to 'patient_id' in Documents table
 
-        [Column("doc_name")]
-        public string DocName { get; set; }  // Maps to 'doc_name' in the database
+        [Required]
+        [StringLength(255)]
+        public string DocName { get; set; } = string.Empty;  // Name of the document
 
-        [Column("doc_type")]
-        public string DocType { get; set; }  // Maps to 'doc_type' in the database
+        [Required]
+        [StringLength(50)]
+        public string DocType { get; set; } = string.Empty;  // 'text' for text content, or MIME type for image (e.g., 'image/jpeg')
 
-        [Column("created_at")]
-        public DateTime CreatedAt { get; set; }  // Maps to 'created_at' in the database
+        [DataType(DataType.DateTime)]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;  // Creation timestamp
 
-        [Column("content")]
-        public byte[] Content { get; set; }  // Maps to 'content' in the database
+        [Required]
+        public byte[] Content { get; set; }  // Stores either text as bytes or image data
 
         // Navigation property
         [ForeignKey("PatientId")]

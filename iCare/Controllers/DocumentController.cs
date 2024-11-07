@@ -1,10 +1,11 @@
-﻿// DocumentController.cs
-
+﻿using Microsoft.AspNetCore.Mvc;
 using iCare.Data;
 using iCare.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace iCare.Controllers
 {
@@ -17,8 +18,8 @@ namespace iCare.Controllers
             _context = context;
         }
 
-        // GET: Document/ManageDocuments/5
-        public IActionResult ManageDocuments(int patientId)
+        // GET: Document/List/5
+        public IActionResult List(int patientId)
         {
             var patient = _context.Patients.Find(patientId);
             if (patient == null)
@@ -30,59 +31,69 @@ namespace iCare.Controllers
                 .Where(d => d.PatientId == patientId)
                 .ToList();
 
-            ViewBag.Patient = patient;
+            ViewBag.PatientName = patient.Name;
+            ViewBag.PatientId = patientId;
             return View(documents);
         }
 
-        // GET: Document/UploadDocument/5
-        public IActionResult UploadDocument(int patientId)
+        // GET: Document/Create/5
+        public IActionResult Create(int patientId)
         {
-            var model = new UploadDocumentViewModel
+            var patient = _context.Patients.Find(patientId);
+            if (patient == null)
             {
-                PatientId = patientId
-            };
-            return View(model);
+                return NotFound();
+            }
+
+            ViewBag.PatientName = patient.Name;
+            ViewBag.PatientId = patientId;
+            return View();
         }
 
-        // POST: Document/UploadDocument
+        // POST: Document/Create
         [HttpPost]
-        public async Task<IActionResult> UploadDocument(UploadDocumentViewModel model)
+        public async Task<IActionResult> Create(int patientId, string documentContent, IFormFile documentImage)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrWhiteSpace(documentContent) && (documentImage == null || documentImage.Length == 0))
             {
-                if (model.File != null && model.File.Length > 0)
+                ModelState.AddModelError("", "Please provide either text content or an image file.");
+                ViewBag.PatientId = patientId;
+                return View();
+            }
+
+            var document = new Document
+            {
+                PatientId = patientId,
+                CreatedAt = DateTime.Now
+            };
+
+            if (!string.IsNullOrWhiteSpace(documentContent))
+            {
+                // Handle text content upload
+                document.DocName = $"TextRecord_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+                document.DocType = "text/plain";
+                document.Content = System.Text.Encoding.UTF8.GetBytes(documentContent);
+            }
+            else if (documentImage != null && documentImage.Length > 0)
+            {
+                // Handle file upload (image)
+                using (var memoryStream = new MemoryStream())
                 {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await model.File.CopyToAsync(memoryStream);
-
-                        var document = new Document
-                        {
-                            PatientId = model.PatientId,
-                            DocName = model.File.FileName,
-                            DocType = model.File.ContentType,
-                            CreatedAt = DateTime.Now,
-                            Content = memoryStream.ToArray()
-                        };
-
-                        _context.Documents.Add(document);
-                        await _context.SaveChangesAsync();
-
-                        return RedirectToAction("ManageDocuments", new { patientId = model.PatientId });
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError("File", "Please select a file to upload.");
+                    await documentImage.CopyToAsync(memoryStream);
+                    document.DocName = documentImage.FileName;
+                    document.DocType = documentImage.ContentType;
+                    document.Content = memoryStream.ToArray();
                 }
             }
 
-            ViewBag.PatientId = model.PatientId;
-            return View(model);
+            _context.Documents.Add(document);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(List), new { patientId });
         }
 
-        // GET: Document/DownloadDocument/5
-        public async Task<IActionResult> DownloadDocument(int id)
+        // GET: Document/Download/5
+        public async Task<IActionResult> Download(int id)
         {
             var document = await _context.Documents.FindAsync(id);
             if (document == null)
