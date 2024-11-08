@@ -1,5 +1,6 @@
 ﻿namespace iCare.Models
 {
+    /// ViewModel for Register
     public class RegisterViewModel
     {
         public string Username { get; set; }

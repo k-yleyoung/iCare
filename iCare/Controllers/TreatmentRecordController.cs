@@ -8,6 +8,7 @@ using System;
 
 namespace iCare.Controllers
 {
+    // This controller handles treatment records for patients
     public class TreatmentRecordController : Controller
     {
         private readonly AppDbContext _context;

@@ -12,7 +12,7 @@ namespace iCare.Controllers
         {
             _context = context;
         }
-
+    // displays create a new patient record view
         public IActionResult Create()
         {
             return View();

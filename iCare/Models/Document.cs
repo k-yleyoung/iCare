@@ -7,10 +7,10 @@ namespace iCare.Models
     public class Document
     {
         [Key]
-        public int DocId { get; set; }  // Maps to 'doc_id' in Documents table
+        public int DocId { get; set; }  // Maps to doc_id in Documents table
 
         [Required]
-        public int PatientId { get; set; }  // Maps to 'patient_id' in Documents table
+        public int PatientId { get; set; }  // Maps to patient_id in Documents table
 
         [Required]
         [StringLength(255)]
@@ -18,7 +18,7 @@ namespace iCare.Models
 
         [Required]
         [StringLength(50)]
-        public string DocType { get; set; } = string.Empty;  // 'text' for text content, or MIME type for image (e.g., 'image/jpeg')
+        public string DocType { get; set; } = string.Empty;
 
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; } = DateTime.Now;  // Creation timestamp

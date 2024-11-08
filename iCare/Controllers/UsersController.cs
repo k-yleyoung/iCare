@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace iCare.Controllers
 {
+    // Controller for managing users
     public class UsersController : Controller
     {
         private readonly AppDbContext _context;

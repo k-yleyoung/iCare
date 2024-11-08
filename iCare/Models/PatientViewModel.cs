@@ -1,5 +1,6 @@
 ﻿namespace iCare.Models
 {
+    // ViewModel for Patient
     public class PatientViewModel
     {
         public int Id { get; set; }
