@@ -8,7 +8,7 @@ namespace iCare.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (!User.Identity.IsAuthenticated)
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
                 // Redirect to login if not authenticated
                 return RedirectToAction("Login", "Account");

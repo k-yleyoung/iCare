@@ -13,31 +13,31 @@
     <div class="card">
         <h4>iCare Board</h4>
         <p>Access the iCare board for patient management and updates.</p>
-        <a href="/iCare" class="btn btn-primary">Go to iCare Board</a> <!-- Link to iCare Board -->
+        <a href="@Url.Action("Index", "iCareBoard")" class="btn btn-primary">Go to iCare Board</a> <!-- Link to iCare Board -->
     </div>
 
     <div class="card">
         <h4>myCare Board</h4>
         <p>Access your personal myCare board.</p>
-        <a href="/myCare" class="btn btn-primary">Go to myCare Board</a> <!-- Link to myCare Board -->
+        <a href="@Url.Action("myCareBoard", "iCareBoard")" class="btn btn-primary">Go to myCare Board</a> <!-- Link to myCare Board -->
     </div>
 
     <div class="card">
         <h4>Manage Users</h4>
         <p>Add, edit, or remove users from the system.</p>
-        <a asp-action="ManageUsers" class="btn btn-primary">Manage Users</a>
+        <a href="@Url.Action("ManageUsers", "Admin")" class="btn btn-primary">Manage Users</a> <!-- Link to Manage Users -->
     </div>
 
     <div class="card">
         <h4>System Settings</h4>
         <p>Configure system settings and permissions.</p>
-        <a asp-action="SystemSettings" class="btn btn-primary">System Settings</a>
+        <a href="@Url.Action("SystemSettings", "Admin")" class="btn btn-primary">System Settings</a> <!-- Link to System Settings -->
     </div>
 
     <div class="card">
         <h4>Reports</h4>
         <p>View hospital reports and analytics.</p>
-        <a asp-action="ViewReports" class="btn btn-primary">View Reports</a>
+        <a href="@Url.Action("ViewReports", "Admin")" class="btn btn-primary">View Reports</a> <!-- Link to View Reports -->
     </div>
 </div>
 
@@ -55,8 +55,16 @@
     .card {
         border: 1px solid #ddd;
         padding: 20px;
-        width: 30%; /* Adjust width as necessary */
-        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h4 {
+        margin-top: 0;
+    }
+
+    .card p {
+        margin-bottom: 10px;
     }
 
     .btn {

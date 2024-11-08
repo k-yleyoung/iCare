@@ -18,7 +18,12 @@ namespace iCare.Controllers
         public IActionResult NurseDashboard()
         {
             // Fetch patients assigned to the logged-in nurse
-            var nurseId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            var nurseId = int.Parse(userIdClaim.Value);
             var assignedPatients = _context.UserPatients
                 .Where(up => up.WorkerId == nurseId)
                 .Select(up => up.Patient)
@@ -37,7 +42,12 @@ namespace iCare.Controllers
             }
 
             // Check if the nurse is assigned to this patient
-            var nurseId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+            var nurseId = int.Parse(userIdClaim.Value);
             var isAssigned = _context.UserPatients.Any(up => up.PatientId == patientId && up.WorkerId == nurseId);
 
             if (!isAssigned)
