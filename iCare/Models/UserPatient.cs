@@ -12,7 +12,7 @@ namespace iCare.Models
         [Key, Column(Order = 1)]
         public int PatientId { get; set; }  // Matches 'PatientId' in UserPatients table
 
-        public DateTime AssignedAt { get; set; }  // Matches 'AssignedAt' in UserPatients table
+        public DateTime AssignedAt { get; set; } = DateTime.Now;  // Matches 'AssignedAt' in UserPatients table
 
         // Navigation properties
         [ForeignKey("WorkerId")]

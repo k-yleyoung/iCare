@@ -6,16 +6,19 @@ using System.Linq;
 
 namespace iCare.Controllers
 {
+    // This controller handles administrative actions and requires the user to be in the "admin" role
     [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private readonly AppDbContext _context;
 
+        // Constructor to inject the AppDbContext dependency
         public AdminController(AppDbContext context)
         {
             _context = context;
         }
 
+        // Action to display the list of users
         public IActionResult ManageUsers()
         {
             var users = _context.Users.ToList();
@@ -23,12 +26,14 @@ namespace iCare.Controllers
         }
 
         // GET: Admin/CreateUser
+        // Action to display the form for creating a new user
         public IActionResult CreateUser()
         {
             return View();
         }
 
         // POST: Admin/CreateUser
+        // Action to handle the form submission for creating a new user
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CreateUser(User user)
@@ -43,6 +48,7 @@ namespace iCare.Controllers
         }
 
         // GET: Admin/EditUser/5
+        // Action to display the form for editing an existing user
         public IActionResult EditUser(int id)
         {
             var user = _context.Users.Find(id);
@@ -54,6 +60,7 @@ namespace iCare.Controllers
         }
 
         // POST: Admin/EditUser/5
+        // Action to handle the form submission for editing an existing user
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EditUser(User user)
@@ -75,6 +82,7 @@ namespace iCare.Controllers
         }
 
         // GET: Admin/DeleteUser/5
+        // Action to display the confirmation page for deleting a user
         public IActionResult DeleteUser(int id)
         {
             var user = _context.Users.Find(id);
@@ -86,6 +94,7 @@ namespace iCare.Controllers
         }
 
         // POST: Admin/DeleteUser/5
+        // Action to handle the form submission for deleting a user
         [HttpPost, ActionName("DeleteUser")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteUserConfirmed(int id)
@@ -99,17 +108,20 @@ namespace iCare.Controllers
             return RedirectToAction(nameof(ManageUsers));
         }
 
+        // Action to display the admin dashboard
         public IActionResult Index()
         {
             return View("AdminDashboard");
         }
 
+        // Action to display the system settings page
         public IActionResult SystemSettings()
         {
             // Add logic for system settings
             return View();
         }
 
+        // Action to display the reports page
         public IActionResult ViewReports()
         {
             // Add logic for viewing reports

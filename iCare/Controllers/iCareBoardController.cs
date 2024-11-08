@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using iCare.Data;
 using iCare.Models;
 using System.IO;
@@ -150,36 +151,32 @@ namespace iCare.Controllers
 
         // POST: iCareBoard/AssignPatients
         [HttpPost]
+        [Authorize]
         public IActionResult AssignPatients(int[] selectedPatientIds)
         {
-            if (User.IsInRole("Doctor") || User.IsInRole("Nurse"))
-            {
-                var workerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                _logger.LogInformation("Assigning patients to user ID {UserId}.", workerId);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-                foreach (var patientId in selectedPatientIds)
-                {
-                    var assignmentExists = _context.UserPatients.Any(wp => wp.WorkerId == workerId && wp.PatientId == patientId);
-                    if (!assignmentExists)
-                    {
-                        _context.UserPatients.Add(new UserPatient
-                        {
-                            WorkerId = workerId,
-                            PatientId = patientId
-                        });
-                        _logger.LogInformation("Assigned patient ID {PatientId} to worker ID {WorkerId}.", patientId, workerId);
-                    }
-                }
-                _context.SaveChanges();
-            }
-            else
+            foreach (var patientId in selectedPatientIds)
             {
-                _logger.LogWarning("Unauthorized attempt to assign patients by user ID {UserId}.", User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var assignmentExists = _context.UserPatients.Any(up => up.WorkerId == userId && up.PatientId == patientId);
+
+                if (!assignmentExists)
+                {
+                    _context.UserPatients.Add(new UserPatient
+                    {
+                        WorkerId = userId,
+                        PatientId = patientId,
+                        AssignedAt = DateTime.Now // Ensure AssignedAt is set to the current datetime
+                    });
+                }
             }
-            return RedirectToAction("Index");
+
+            _context.SaveChanges();
+            return RedirectToAction(nameof(myCareBoard));
         }
 
         // GET: myCareBoard
+        [Authorize]
         public IActionResult myCareBoard()
         {
             var workerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

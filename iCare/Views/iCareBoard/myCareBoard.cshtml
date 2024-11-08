@@ -4,23 +4,33 @@
     ViewData["Title"] = "My Care Board";
 }
 
-<h2>My Assigned Patients</h2>
+<h1>My Care Board</h1>
 
 @if (Model.Any())
 {
-    <ul class="list-group">
-        @foreach (var patient in Model)
-        {
-            <li class="list-group-item">
-                <h4>@patient.Name (@patient.BloodGroup)</h4>
-                <p>Assigned Location: @patient.TreatmentArea</p>
-                <p>DOB: @patient.DateOfBirth.ToShortDateString()</p>
-                <a asp-action="ViewPatient" asp-route-id="@patient.Id" class="btn btn-success btn-sm">
-                    <i class="fas fa-user"></i> View Patient
-                </a>
-            </li>
-        }
-    </ul>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>Blood Group</th>
+                <th>Treatment Area</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in Model)
+            {
+                <tr>
+                    <td>@patient.Name</td>
+                    <td>@patient.DateOfBirth.ToString("yyyy-MM-dd")</td>
+                    <td>@patient.Address</td>
+                    <td>@patient.BloodGroup</td>
+                    <td>@patient.TreatmentArea</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 else
 {

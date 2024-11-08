@@ -30,9 +30,13 @@ namespace iCare.Controllers
             return View(patientRecord);
         }
 
+        // Action to display the list of patient records
         public IActionResult List()
         {
+            // Retrieve all patient records from the database
             var patientRecords = _context.PatientRecords.ToList();
+            
+            // Return the view with the list of patient records
             return View(patientRecords);
         }
     }
