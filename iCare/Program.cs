@@ -17,7 +17,7 @@ builder.Services.AddControllersWithViews();
 
 // Add DbContext with MySQL
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySQL(connectionString)); // Use the connectionString variable with null check
+    options.UseSqlServer(connectionString)); // Use the connectionString variable with null check
 
 // Authentication configuration
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme) // Use default scheme
@@ -26,6 +26,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.Name = "UserLoginCookie";
         options.LoginPath = "/Account/Login";
     });
+
+
 // Authorization configuration
 builder.Services.AddAuthorization();
 

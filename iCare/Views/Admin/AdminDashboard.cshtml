@@ -28,6 +28,13 @@
         <a asp-action="ManageUsers" class="btn btn-primary">Manage Users</a>
     </div>
 
+    <!-- New "Create Users" Card -->
+    <div class="card">
+        <h4>Create New Users</h4>
+        <p>Create a new doctor, nurse, or patient in the system.</p>
+        <a asp-action="ManageUsers" asp-controller="Admin" class="btn btn-primary">Create Users</a> <!-- Link to Manage Users or Create User Actions -->
+    </div>
+
     <div class="card">
         <h4>System Settings</h4>
         <p>Configure system settings and permissions.</p>
@@ -68,3 +75,4 @@
         border-radius: 5px;
     }
 </style>
+

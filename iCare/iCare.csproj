@@ -1,64 +1,63 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <!-- Ensure that the correct configuration for running HTTP and HTTPS is specified -->
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
+	<!-- Ensure that the correct configuration for running HTTP and HTTPS is specified -->
+	<PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
+	<PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
 
-  <!-- Including the necessary folders and files -->
-  <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Views\Account\" />
-    <Folder Include="Views\Patients\" />
-    <Folder Include="Views\Admin\" />
-    <Folder Include="Views\Doctor\" />
-    <Folder Include="Views\Nurse\" />
-    <Folder Include="Views\iCareBoard\" />
-  </ItemGroup>
+	<!-- Including the necessary folders and files -->
+	<ItemGroup>
+		<Folder Include="Data\" />
+		<Folder Include="Views\Account\" />
+		<Folder Include="Views\Patients\" />
+		<Folder Include="Views\Admin\" />
+		<Folder Include="Views\Doctor\" />
+		<Folder Include="Views\Nurse\" />
+		<Folder Include="Views\iCareBoard\" />
+	</ItemGroup>
 
-  <!-- Excluding models from single file publishing and specifying that they're copied during publishing -->
-  <ItemGroup>
-    <Compile Update="Models\LoginViewModel.cs">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Compile>
-    <Compile Update="Models\PatientViewModel.cs">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Compile>
-  </ItemGroup>
+	<!-- Excluding models from single file publishing and specifying that they're copied during publishing -->
+	<ItemGroup>
+		<Compile Update="Models\LoginViewModel.cs">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Compile>
+		<Compile Update="Models\PatientViewModel.cs">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Compile>
+	</ItemGroup>
 
-  <!-- Add the necessary package references, including Entity Framework Core and MySQL support -->
-  <ItemGroup>
-    <!-- EF Core Design Tools for migrations -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="MySql.Data" Version="8.2.0" />
+	<!-- Add the necessary package references, including Entity Framework Core and MySQL support -->
+	<ItemGroup>
+		<!-- EF Core Design Tools for migrations -->
+		<PackageReference Include="itext7" Version="8.0.5" />
+		<PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.5" />
+		<PackageReference Include="iTextSharp" Version="5.5.13.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 
-    <!-- MySQL Entity Framework Core package for MySQL database support -->
-    <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
+		<PackageReference Include="MySql.Data" Version="8.2.0" />
 
-    <!-- Optionally, if you need Entity Framework Core runtime, add this -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
-    <PackageReference Include="itext7" Version="8.0.5" />
-    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
-    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.5" />
-  </ItemGroup>
+		<!-- MySQL Entity Framework Core package for MySQL database support -->
+		<PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.10" />
 
-  <ItemGroup>
-    <None Remove="Views\Admin\" />
-    <None Remove="Views\Doctor\" />
-    <None Remove="Views\Nurse\" />
-    <None Remove="Views\iCareBoard\" />
-    <None Remove="itext7" />
-    <None Remove="iTextSharp" />
-    <None Remove="itext7.bouncy-castle-adapter" />
-  </ItemGroup>
+		<!-- Optionally, if you need Entity Framework Core runtime, add this -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Views\Admin\" />
+		<None Remove="Views\Doctor\" />
+		<None Remove="Views\Nurse\" />
+		<None Remove="Views\iCareBoard\" />
+	</ItemGroup>
 </Project>

@@ -18,6 +18,7 @@ namespace iCare.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly ILogger<iCareBoardController> _logger;
 
+        // constructor initializes the database context, environment, and logger for logging actions
         public iCareBoardController(AppDbContext context, IWebHostEnvironment env, ILogger<iCareBoardController> logger)
         {
             _context = context;
@@ -25,77 +26,84 @@ namespace iCare.Controllers
             _logger = logger;
         }
 
-        // GET: iCareBoard/Create
+        // displays the create patient view
+        // input: none, output: patient creation page view
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: iCareBoard/Create
+        // handles form submission to create a new patient
+        // input: patient data, output: redirects to index if creation is successful, else returns view with errors
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Patient patient)
         {
             if (ModelState.IsValid)
             {
-                _logger.LogInformation("Creating new patient: {PatientName}", patient.Name);
+                _logger.LogInformation("creating new patient: {PatientName}", patient.Name);
                 _context.Patients.Add(patient);
                 _context.SaveChanges();
-                TempData["SuccessMessage"] = "Patient created successfully.";
+                TempData["SuccessMessage"] = "patient created successfully.";
                 return RedirectToAction(nameof(Index));
             }
-            _logger.LogWarning("Invalid model state for patient creation.");
+            _logger.LogWarning("invalid model state for patient creation.");
             return View(patient);
         }
 
-        // GET: iCareBoard
+        // displays a list of patients
+        // input: none, output: list page view with all patients
         public IActionResult Index()
         {
-            _logger.LogInformation("Fetching list of patients.");
+            _logger.LogInformation("fetching list of patients.");
             var patients = _context.Patients.ToList();
             return View(patients);
         }
 
-        // GET: iCareBoard/Edit/5
+        // displays the edit page for a specific patient
+        // input: patient id, output: edit page view with patient details if found, else not found result
         public IActionResult Edit(int id)
         {
-            _logger.LogInformation("Fetching patient details for ID {PatientId}.", id);
+            _logger.LogInformation("fetching patient details for id {PatientId}.", id);
             var patient = _context.Patients.Find(id);
             if (patient == null)
             {
-                _logger.LogWarning("Patient with ID {PatientId} not found.", id);
+                _logger.LogWarning("patient with id {PatientId} not found.", id);
                 return NotFound();
             }
             return View(patient);
         }
 
-        // POST: iCareBoard/Edit/5
+        // handles the form submission to edit a patient's details
+        // input: updated patient data, output: redirects to index if successful, else returns view with errors
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Patient patient)
         {
             if (ModelState.IsValid)
             {
-                _logger.LogInformation("Updating patient ID {PatientId}.", patient.Id);
+                _logger.LogInformation("updating patient id {PatientId}.", patient.Id);
                 _context.Update(patient);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            _logger.LogWarning("Model state invalid for patient ID {PatientId}.", patient.Id);
+            _logger.LogWarning("model state invalid for patient id {PatientId}.", patient.Id);
             return View(patient);
         }
 
-        // GET: iCareBoard/Records/5
+        // displays a list of pdf records for a specific patient
+        // input: patient id, output: records page view with list of pdfs
         public IActionResult Records(int patientId)
         {
-            _logger.LogInformation("Retrieving records for patient ID {PatientId}.", patientId);
+            _logger.LogInformation("retrieving records for patient id {PatientId}.", patientId);
             var patient = _context.Patients.Find(patientId);
             if (patient == null)
             {
-                _logger.LogWarning("Patient with ID {PatientId} not found.", patientId);
+                _logger.LogWarning("patient with id {PatientId} not found.", patientId);
                 return NotFound();
             }
 
+            // get the folder path where pdfs for this patient are stored
             var pdfFolder = Path.Combine(_env.ContentRootPath, "PDFs", patientId.ToString());
             var pdfFiles = Directory.Exists(pdfFolder) ?
                 Directory.GetFiles(pdfFolder).Select(Path.GetFileName).ToList() : new List<string>();
@@ -105,23 +113,24 @@ namespace iCare.Controllers
             return View(pdfFiles);
         }
 
-        // POST: iCareBoard/CreatePdf
+        // handles creation of a new pdf for a specific patient
+        // input: patient id and document content, output: redirects to records page or error status
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CreatePdf(int patientId, string documentContent)
         {
             if (string.IsNullOrWhiteSpace(documentContent))
             {
-                _logger.LogWarning("Document content is empty for patient ID {PatientId}.", patientId);
-                ModelState.AddModelError(string.Empty, "Document content cannot be empty.");
+                _logger.LogWarning("document content is empty for patient id {PatientId}.", patientId);
+                ModelState.AddModelError(string.Empty, "document content cannot be empty.");
                 return RedirectToAction(nameof(Records), new { patientId });
             }
 
-            _logger.LogInformation("Creating PDF for patient ID {PatientId}.", patientId);
+            _logger.LogInformation("creating pdf for patient id {PatientId}.", patientId);
             var patientFolder = Path.Combine(_env.ContentRootPath, "PDFs", patientId.ToString());
             if (!Directory.Exists(patientFolder))
             {
-                _logger.LogInformation("Creating directory for patient PDFs at {FolderPath}.", patientFolder);
+                _logger.LogInformation("creating directory for patient pdfs at {FolderPath}.", patientFolder);
                 Directory.CreateDirectory(patientFolder);
             }
 
@@ -129,6 +138,7 @@ namespace iCare.Controllers
 
             try
             {
+                // create and save pdf with given content
                 using (var writer = new PdfWriter(pdfPath))
                 {
                     using (var pdf = new PdfDocument(writer))
@@ -137,25 +147,26 @@ namespace iCare.Controllers
                         document.Add(new Paragraph(documentContent));
                     }
                 }
-                _logger.LogInformation("PDF created successfully at {PdfPath}.", pdfPath);
+                _logger.LogInformation("pdf created successfully at {PdfPath}.", pdfPath);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while creating PDF for patient ID {PatientId}.", patientId);
-                return StatusCode(500, "Internal server error while creating PDF.");
+                _logger.LogError(ex, "error occurred while creating pdf for patient id {PatientId}.", patientId);
+                return StatusCode(500, "internal server error while creating pdf.");
             }
 
             return RedirectToAction(nameof(Records), new { patientId });
         }
 
-        // POST: iCareBoard/AssignPatients
+        // assigns selected patients to the current logged-in doctor or nurse
+        // input: array of selected patient ids, output: redirects to index after assigning
         [HttpPost]
         public IActionResult AssignPatients(int[] selectedPatientIds)
         {
             if (User.IsInRole("Doctor") || User.IsInRole("Nurse"))
             {
                 var workerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                _logger.LogInformation("Assigning patients to user ID {UserId}.", workerId);
+                _logger.LogInformation("assigning patients to user id {UserId}.", workerId);
 
                 foreach (var patientId in selectedPatientIds)
                 {
@@ -167,23 +178,24 @@ namespace iCare.Controllers
                             WorkerId = workerId,
                             PatientId = patientId
                         });
-                        _logger.LogInformation("Assigned patient ID {PatientId} to worker ID {WorkerId}.", patientId, workerId);
+                        _logger.LogInformation("assigned patient id {PatientId} to worker id {WorkerId}.", patientId, workerId);
                     }
                 }
                 _context.SaveChanges();
             }
             else
             {
-                _logger.LogWarning("Unauthorized attempt to assign patients by user ID {UserId}.", User.FindFirstValue(ClaimTypes.NameIdentifier));
+                _logger.LogWarning("unauthorized attempt to assign patients by user id {UserId}.", User.FindFirstValue(ClaimTypes.NameIdentifier));
             }
             return RedirectToAction("Index");
         }
 
-        // GET: myCareBoard
+        // displays the my care board for the logged-in worker (doctor or nurse) with assigned patients
+        // input: none, output: my care board view with assigned patients
         public IActionResult myCareBoard()
         {
             var workerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            _logger.LogInformation("Loading assigned patients for worker ID {WorkerId}.", workerId);
+            _logger.LogInformation("loading assigned patients for worker id {WorkerId}.", workerId);
 
             var assignedPatients = _context.UserPatients
                 .Where(up => up.WorkerId == workerId)
@@ -193,7 +205,11 @@ namespace iCare.Controllers
             return View(assignedPatients);
         }
 
-        // GET: iCareBoard/ViewPatient/5
+        // displays patient details from either iCareBoard or myCareBoard view
+        // input: patient id, output: view with patient details if found, else not found result
+        [HttpGet]
+        [Route("iCareBoard/ViewPatient/{id}")]
+        [Route("myCareBoard/ViewPatient/{id}")]
         public IActionResult ViewPatient(int id)
         {
             var patient = _context.Patients.FirstOrDefault(p => p.Id == id);
@@ -205,7 +221,8 @@ namespace iCare.Controllers
             return View(patient);
         }
 
-        // GET: iCareBoard/ManageDocuments/5
+        // displays a list of documents associated with a specific patient
+        // input: patient id, output: manage documents view with list of documents
         public IActionResult ManageDocuments(int patientId)
         {
             var documents = _context.Documents.Where(d => d.PatientId == patientId).ToList();
@@ -213,7 +230,8 @@ namespace iCare.Controllers
             return View(documents);
         }
 
-        // GET: iCareBoard/ManageTreatment/5
+        // displays treatment records for a specific patient
+        // input: patient id, output: manage treatment view with list of treatment records
         public IActionResult ManageTreatment(int patientId)
         {
             var treatmentRecords = _context.PatientRecords.Where(r => r.PatientId == patientId).ToList();

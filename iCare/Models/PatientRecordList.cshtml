@@ -7,6 +7,7 @@
         <tr>
             <th>Record Date</th>
             <th>Treatment Details</th>
+            <th>Actions</th> <!-- New column for actions -->
         </tr>
     </thead>
     <tbody>
@@ -15,6 +16,12 @@
             <tr>
                 <td>@record.RecordDate.ToShortDateString()</td>
                 <td>@record.TreatmentDetails</td>
+                <td>
+                    <!-- Button to upload a PDF document for the specific record -->
+                    <a asp-action="UploadDocument" asp-controller="PatientRecord" asp-route-patientId="@record.PatientId" class="btn btn-primary">
+                        Upload PDF
+                    </a>
+                </td>
             </tr>
         }
     </tbody>
